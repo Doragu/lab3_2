@@ -33,10 +33,9 @@ public class Order {
 
     }
 
-    public void confirm() {
+    public void confirm(DateTime cancelTime) {
         requireState(State.SUBMITTED);
-        int hoursElapsedAfterSubmittion = Hours.hoursBetween(subbmitionDate, new DateTime())
-                                               .getHours();
+        int hoursElapsedAfterSubmittion = Hours.hoursBetween(subbmitionDate, cancelTime).getHours();
         if (hoursElapsedAfterSubmittion > VALID_PERIOD_HOURS) {
             orderState = State.CANCELLED;
             throw new OrderExpiredException();
@@ -59,18 +58,12 @@ public class Order {
             }
         }
 
-        throw new OrderStateException("order should be in state "
-                                      + allowedStates
-                                      + " to perform required  operation, but is in "
-                                      + orderState);
+        throw new OrderStateException(
+                "order should be in state " + allowedStates + " to perform required  operation, but is in " + orderState);
 
     }
 
     public enum State {
-        CREATED,
-        SUBMITTED,
-        CONFIRMED,
-        REALIZED,
-        CANCELLED
+        CREATED, SUBMITTED, CONFIRMED, REALIZED, CANCELLED
     }
 }
