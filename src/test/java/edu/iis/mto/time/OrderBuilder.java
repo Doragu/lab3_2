@@ -22,6 +22,11 @@ public class OrderBuilder {
         }
     }
 
+    public OrderBuilder withConfirmBadTimeWithoutCatchException() {
+        order.confirm(order.getSubbmitionDate().plusHours(25));
+        return this;
+    }
+
     public OrderBuilder withConfirmGoodTime() {
         order.confirm(order.getSubbmitionDate().plusHours(1));
         return this;

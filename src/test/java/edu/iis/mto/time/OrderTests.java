@@ -52,4 +52,9 @@ public class OrderTests {
     public void testIfThrowsExceptionWithWrongOrder() {
         new OrderBuilder().withRealize();
     }
+
+    @Test(expected = OrderExpiredException.class)
+    public void testIfThrowsExceptionWithWrongDate() {
+        new OrderBuilder().withAddItem(new OrderItem()).withSubmit().withConfirmBadTimeWithoutCatchException().build();
+    }
 }
