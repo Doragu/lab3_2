@@ -22,7 +22,6 @@ public class Order {
 
         items.add(item);
         orderState = State.CREATED;
-
     }
 
     public void submit() {
@@ -40,6 +39,8 @@ public class Order {
             orderState = State.CANCELLED;
             throw new OrderExpiredException();
         }
+
+        orderState = State.CONFIRMED;
     }
 
     public void realize() {
@@ -50,6 +51,8 @@ public class Order {
     State getOrderState() {
         return orderState;
     }
+
+    DateTime getSubbmitionDate() { return subbmitionDate;}
 
     private void requireState(State... allowedStates) {
         for (State allowedState : allowedStates) {

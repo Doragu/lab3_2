@@ -29,4 +29,25 @@ public class OrderTests {
 
         assertThat(Order.State.SUBMITTED, is(order.getOrderState()));
     }
+
+    @Test
+    public void testIfAfterOneMinuteConfirmStateIsCONFIRMED() {
+        order.addItem(new OrderItem());
+        order.submit();
+        order.confirm(order.getSubbmitionDate().plusMinutes(1));
+
+        assertThat(Order.State.CONFIRMED, is(order.getOrderState()));
+    }
+
+    @Test
+    public void testIfAfterTwoDaysConfirmStateIsCANCELLED() {
+        order.addItem(new OrderItem());
+        order.submit();
+        try {
+            order.confirm(order.getSubbmitionDate().plusDays(2));
+        } catch (OrderExpiredException e) {
+        }
+
+        assertThat(Order.State.CANCELLED, is(order.getOrderState()));
+    }
 }
