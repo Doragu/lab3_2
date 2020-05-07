@@ -52,7 +52,9 @@ public class Order {
         return orderState;
     }
 
-    DateTime getSubbmitionDate() { return subbmitionDate;}
+    DateTime getSubbmitionDate() {
+        return subbmitionDate;
+    }
 
     private void requireState(State... allowedStates) {
         for (State allowedState : allowedStates) {

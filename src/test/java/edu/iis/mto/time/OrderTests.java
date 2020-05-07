@@ -1,6 +1,5 @@
 package edu.iis.mto.time;
 
-import org.junit.Before;
 import org.junit.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -36,7 +35,8 @@ public class OrderTests {
         try {
             order = new OrderBuilder().withAddItem(new OrderItem()).withSubmit().withConfirmBadTime().build();
         } catch (OrderExpiredException e) {
-        } finally {
+        }
+        finally {
             assertThat(Order.State.CANCELLED, is(order.getOrderState()));
         }
     }

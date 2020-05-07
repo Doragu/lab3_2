@@ -1,6 +1,7 @@
 package edu.iis.mto.time;
 
 public class OrderBuilder {
+
     private Order order = new Order();
 
     public OrderBuilder withAddItem(OrderItem item) {
@@ -17,9 +18,9 @@ public class OrderBuilder {
         try {
             order.confirm(order.getSubbmitionDate().plusHours(25));
         } catch (OrderExpiredException e) {
-        } finally {
-            return this;
         }
+
+        return this;
     }
 
     public OrderBuilder withConfirmBadTimeWithoutCatchException() {
