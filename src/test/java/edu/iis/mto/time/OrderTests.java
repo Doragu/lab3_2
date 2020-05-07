@@ -47,4 +47,9 @@ public class OrderTests {
 
         assertThat(Order.State.REALIZED, is(order.getOrderState()));
     }
+
+    @Test(expected = OrderStateException.class)
+    public void testIfThrowsExceptionWithWrongOrder() {
+        new OrderBuilder().withRealize();
+    }
 }
