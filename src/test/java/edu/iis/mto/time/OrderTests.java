@@ -18,7 +18,7 @@ public class OrderTests {
     @Test
     public void testIfAfterSubmitStateIsSUBMITTED() {
         Order order = new OrderBuilder().withAddItem(new OrderItem()).withSubmit().build();
-        
+
         assertThat(Order.State.SUBMITTED, is(order.getOrderState()));
     }
 
@@ -39,5 +39,12 @@ public class OrderTests {
         } finally {
             assertThat(Order.State.CANCELLED, is(order.getOrderState()));
         }
+    }
+
+    @Test
+    public void testIfAfterRealizeStateIsREALIZED() {
+        Order order = new OrderBuilder().withAddItem(new OrderItem()).withSubmit().withConfirmGoodTime().withRealize().build();
+
+        assertThat(Order.State.REALIZED, is(order.getOrderState()));
     }
 }
