@@ -8,46 +8,36 @@ import static org.hamcrest.Matchers.*;
 
 public class OrderTests {
 
-    private Order order;
-
-    @Before
-    public void initialize() {
-        order = new Order();
-    }
-
     @Test
     public void testIfAfterAddItemStateIsCREATED() {
-        order.addItem(new OrderItem());
+        Order order = new OrderBuilder().withAddItem(new OrderItem()).build();
 
         assertThat(Order.State.CREATED, is(order.getOrderState()));
     }
 
     @Test
     public void testIfAfterSubmitStateIsSUBMITTED() {
-        order.addItem(new OrderItem());
-        order.submit();
-
+        Order order = new OrderBuilder().withAddItem(new OrderItem()).withSubmit().build();
+        
         assertThat(Order.State.SUBMITTED, is(order.getOrderState()));
     }
 
     @Test
     public void testIfAfterOneMinuteConfirmStateIsCONFIRMED() {
-        order.addItem(new OrderItem());
-        order.submit();
-        order.confirm(order.getSubbmitionDate().plusMinutes(1));
+        Order order = new OrderBuilder().withAddItem(new OrderItem()).withSubmit().withConfirmGoodTime().build();
 
         assertThat(Order.State.CONFIRMED, is(order.getOrderState()));
     }
 
     @Test
     public void testIfAfterTwoDaysConfirmStateIsCANCELLED() {
-        order.addItem(new OrderItem());
-        order.submit();
-        try {
-            order.confirm(order.getSubbmitionDate().plusDays(2));
-        } catch (OrderExpiredException e) {
-        }
+        Order order = new Order();
 
-        assertThat(Order.State.CANCELLED, is(order.getOrderState()));
+        try {
+            order = new OrderBuilder().withAddItem(new OrderItem()).withSubmit().withConfirmBadTime().build();
+        } catch (OrderExpiredException e) {
+        } finally {
+            assertThat(Order.State.CANCELLED, is(order.getOrderState()));
+        }
     }
 }
