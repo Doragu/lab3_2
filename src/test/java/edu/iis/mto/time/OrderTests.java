@@ -14,10 +14,19 @@ public class OrderTests {
     public void initialize() {
         order = new Order();
     }
+
     @Test
     public void testIfAfterAddItemStateIsCREATED() {
         order.addItem(new OrderItem());
 
         assertThat(Order.State.CREATED, is(order.getOrderState()));
+    }
+
+    @Test
+    public void testIfAfterSubmitStateIsSUBMITTED() {
+        order.addItem(new OrderItem());
+        order.submit();
+
+        assertThat(Order.State.SUBMITTED, is(order.getOrderState()));
     }
 }
