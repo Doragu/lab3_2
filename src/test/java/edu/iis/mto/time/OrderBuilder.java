@@ -1,8 +1,14 @@
 package edu.iis.mto.time;
 
+import org.joda.time.DateTime;
+
 public class OrderBuilder {
 
-    private Order order = new Order();
+    private Order order;
+
+    public OrderBuilder(DateTime cancelTime) {
+        order = new Order(cancelTime);
+    }
 
     public OrderBuilder withAddItem(OrderItem item) {
         order.addItem(item);
@@ -14,22 +20,17 @@ public class OrderBuilder {
         return this;
     }
 
-    public OrderBuilder withConfirmBadTime() {
+    public OrderBuilder withConfirm() {
         try {
-            order.confirm(order.getSubbmitionDate().plusHours(25));
+            order.confirm();
         } catch (OrderExpiredException e) {
         }
 
         return this;
     }
 
-    public OrderBuilder withConfirmBadTimeWithoutCatchException() {
-        order.confirm(order.getSubbmitionDate().plusHours(25));
-        return this;
-    }
-
-    public OrderBuilder withConfirmGoodTime() {
-        order.confirm(order.getSubbmitionDate().plusHours(1));
+    public OrderBuilder withConfirmWithoutCatchException() {
+        order.confirm();
         return this;
     }
 

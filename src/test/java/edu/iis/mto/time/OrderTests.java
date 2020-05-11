@@ -1,5 +1,7 @@
 package edu.iis.mto.time;
 
+import org.joda.time.DateTime;
+import org.junit.Before;
 import org.junit.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -7,23 +9,31 @@ import static org.hamcrest.Matchers.*;
 
 public class OrderTests {
 
+    private DateTime time;
+
+    @Before
+    public void initialize() {
+        time = new DateTime();  
+    }
+
     @Test
     public void testIfAfterAddItemStateIsCREATED() {
-        Order order = new OrderBuilder().withAddItem(new OrderItem()).build();
+        Order order = new OrderBuilder(time).withAddItem(new OrderItem()).build();
 
         assertThat(Order.State.CREATED, is(order.getOrderState()));
     }
 
     @Test
     public void testIfAfterSubmitStateIsSUBMITTED() {
-        Order order = new OrderBuilder().withAddItem(new OrderItem()).withSubmit().build();
+        Order order = new OrderBuilder(time).withAddItem(new OrderItem()).withSubmit().build();
 
         assertThat(Order.State.SUBMITTED, is(order.getOrderState()));
     }
 
     @Test
     public void testIfAfterOneMinuteConfirmStateIsCONFIRMED() {
-        Order order = new OrderBuilder().withAddItem(new OrderItem()).withSubmit().withConfirmGoodTime().build();
+        time = time.plusMinutes(1);
+        Order order = new OrderBuilder(time).withAddItem(new OrderItem()).withSubmit().withConfirm().build();
 
         assertThat(Order.State.CONFIRMED, is(order.getOrderState()));
     }
@@ -33,7 +43,8 @@ public class OrderTests {
         Order order = new Order();
 
         try {
-            order = new OrderBuilder().withAddItem(new OrderItem()).withSubmit().withConfirmBadTime().build();
+            time = time.plusHours(25).plusMinutes(1);
+            order = new OrderBuilder(time).withAddItem(new OrderItem()).withSubmit().withConfirm().build();
         } catch (OrderExpiredException e) {
         }
         finally {
@@ -43,18 +54,19 @@ public class OrderTests {
 
     @Test
     public void testIfAfterRealizeStateIsREALIZED() {
-        Order order = new OrderBuilder().withAddItem(new OrderItem()).withSubmit().withConfirmGoodTime().withRealize().build();
+        Order order = new OrderBuilder(time).withAddItem(new OrderItem()).withSubmit().withConfirm().withRealize().build();
 
         assertThat(Order.State.REALIZED, is(order.getOrderState()));
     }
 
     @Test(expected = OrderStateException.class)
     public void testIfThrowsExceptionWithWrongOrder() {
-        new OrderBuilder().withRealize();
+        new OrderBuilder(time).withRealize();
     }
 
     @Test(expected = OrderExpiredException.class)
     public void testIfThrowsExceptionWithWrongDate() {
-        new OrderBuilder().withAddItem(new OrderItem()).withSubmit().withConfirmBadTimeWithoutCatchException().build();
+        time = time.plusHours(25).plusMinutes(1);
+        new OrderBuilder(time).withAddItem(new OrderItem()).withSubmit().withConfirmWithoutCatchException().build();
     }
 }
