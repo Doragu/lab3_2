@@ -1,13 +1,11 @@
 package edu.iis.mto.time;
 
-import org.joda.time.DateTime;
-
 public class OrderBuilder {
 
     private Order order;
 
-    public OrderBuilder(DateTime cancelTime) {
-        order = new Order(cancelTime);
+    public OrderBuilder(TimeSource timeSource) {
+        order = new Order(timeSource);
     }
 
     public OrderBuilder withAddItem(OrderItem item) {

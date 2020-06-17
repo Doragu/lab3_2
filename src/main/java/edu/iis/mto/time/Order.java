@@ -11,15 +11,16 @@ public class Order {
     private static final int VALID_PERIOD_HOURS = 24;
     private State orderState;
     private List<OrderItem> items = new ArrayList<OrderItem>();
-    private DateTime subbmitionDate, cancelTime = null;
+    private DateTime subbmitionDate;
+    private TimeSource timeSource;
 
     public Order() {
         orderState = State.CREATED;
     }
 
-    public Order(DateTime cancelTime) {
+    public Order(TimeSource timeSource) {
         orderState = State.CREATED;
-        this.cancelTime = cancelTime;
+        this.timeSource = timeSource;
     }
 
     public void addItem(OrderItem item) {
@@ -39,13 +40,7 @@ public class Order {
 
     public void confirm() {
         requireState(State.SUBMITTED);
-        int hoursElapsedAfterSubmittion;
-
-        if (cancelTime != null) {
-            hoursElapsedAfterSubmittion = Hours.hoursBetween(subbmitionDate, cancelTime).getHours();
-        } else {
-            hoursElapsedAfterSubmittion = Hours.hoursBetween(subbmitionDate, new DateTime()).getHours();
-        }
+        int hoursElapsedAfterSubmittion = Hours.hoursBetween(subbmitionDate, timeSource.getActualDate()).getHours();
 
         if (hoursElapsedAfterSubmittion > VALID_PERIOD_HOURS) {
             orderState = State.CANCELLED;
